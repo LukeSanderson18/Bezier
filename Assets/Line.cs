@@ -43,6 +43,7 @@ public class Line : MonoBehaviour {
         for (int i = nodes.Length; i == nodes.Length; i++)
         {
             list_go[i-1].GetComponent<LineRenderer>().SetPosition(1,list_go[0].transform.position-list_go[i-1].transform.position);
+            list_go[i - 1].GetComponent<Node>().lastNode = true;
            // Destroy(list_go[i-1].gameObject);
         }
 
