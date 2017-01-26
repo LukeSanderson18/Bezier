@@ -11,7 +11,6 @@ public class Node : MonoBehaviour {
     GameObject controlPointGO;
     public GameObject controlPointPrefab;
     public GameObject babyNode1prefab;
-    GameObject babyNode1;
     [Range(0f, 1f)]
     public float magicFloat = 0.5f;
     //
@@ -20,6 +19,9 @@ public class Node : MonoBehaviour {
     public Vector3 endPoint;
 
     public Vector3 bezierPoint;
+
+    public int noOfSegments = 10;
+    public List<GameObject> babyNodes;
 
     //
 
@@ -30,7 +32,7 @@ public class Node : MonoBehaviour {
 	void Start () {
 
         //It takes a frame to receive data from Line class. So I started later. Sue me
-        Invoke("Start2", 0.1f);     
+        //Invoke("Start2", 0.1f);     
 
 
 	}
@@ -52,7 +54,12 @@ public class Node : MonoBehaviour {
 
         controlPoint = Vector3.Lerp(startPoint, endPoint, 0.5f);
         controlPointGO = Instantiate(controlPointPrefab, controlPoint, Quaternion.identity);
-        babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
+        babyNodes.Clear();
+        for (int i = 0; i < noOfSegments; i++)
+        {
+            GameObject babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
+            babyNodes.Add(babyNode1);
+        }
 
 
         running = true;
@@ -61,17 +68,29 @@ public class Node : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            //Start2();
+        }
         if (running)
         {
+            
             startPoint = transform.position;
             endPoint = nextGO.transform.position;   //convert next GO number to int
             controlPoint = controlPointGO.transform.position;
 
-            magicFloat = Mathf.PingPong(Time.time, 1);
+            //magicFloat = Mathf.PingPong(Time.time, 1);
 
-            GetBezier(magicFloat);
 
-            babyNode1.transform.position = bezierPoint;
+            for (int i = 0; i < babyNodes.Count; i++ )
+            {
+                GetBezier(i/(float)babyNodes.Count);
+                //print(i + "   ___ " + bezierPoint);               //testing.
+                babyNodes[i].transform.position = bezierPoint;
+
+            }
+
+
 
 
         }
