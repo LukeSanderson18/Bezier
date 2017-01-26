@@ -29,12 +29,13 @@ public class Node : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-        Invoke("Ham", 0.1f);
-        babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
+        //It takes a frame to receive data from Line class. So I started later. Sue me
+        Invoke("Start2", 0.1f);     
+
 
 	}
 
-    void Ham()
+    public void Start2()
     {
         if (!lastNode)
         {
@@ -51,6 +52,8 @@ public class Node : MonoBehaviour {
 
         controlPoint = Vector3.Lerp(startPoint, endPoint, 0.5f);
         controlPointGO = Instantiate(controlPointPrefab, controlPoint, Quaternion.identity);
+        babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
+
 
         running = true;
     }
@@ -68,20 +71,21 @@ public class Node : MonoBehaviour {
 
             GetBezier(magicFloat);
 
-
             babyNode1.transform.position = bezierPoint;
+
+
         }
 		
 	}
 
     public Vector3 GetBezier(float t)
     {
-        
         bezierPoint.x = (1 - t) * (1 - t) * startPoint.x + 2 * (1 - t) * t * controlPoint.x + t * t * endPoint.x;
         bezierPoint.y = (1 - t) * (1 - t) * startPoint.y + 2 * (1 - t) * t * controlPoint.y + t * t * endPoint.y;
         bezierPoint.z = (1 - t) * (1 - t) * startPoint.z + 2 * (1 - t) * t * controlPoint.z + t * t * endPoint.z;
 
-       
         return bezierPoint;
+
+        //what a sexy bit of code.
     }
 }

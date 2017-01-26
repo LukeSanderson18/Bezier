@@ -4,22 +4,25 @@ using System.Collections;
 
 public class Line : MonoBehaviour {
 
-    public Vector3[] nodes;
+    public List<Vector3> nodes;
     public GameObject nodePrefab;
     public List<GameObject> list_go;
 
+    int totalNodes;
+
     void Start()
     {
-        for (int i = 0; i < nodes.Length; i++)
+        for (int i = 0; i < nodes.Count; i++)
         {
             GameObject an = Instantiate(nodePrefab, nodes[i] ,Quaternion.identity) as GameObject;
             list_go.Add(an);
             an.GetComponent<Node>().nodeNumber = i;
             an.gameObject.name = ""+i;
+            totalNodes++;
         }
     }
 
-    public void Reset()
+   /* public void Reset()
     {
         nodes = new Vector3[]
         {
@@ -29,26 +32,67 @@ public class Line : MonoBehaviour {
 
         };
     }
+    */
+
+    void Add()
+    {
+        list_go[list_go.Count - 1].GetComponent<Node>().lastNode = false;
+        GameObject an = Instantiate(nodePrefab, Vector3.zero, Quaternion.identity) as GameObject;
+        list_go.Add(an);
+        nodes.Add(an.transform.position);
+        
+        an.GetComponent<Node>().nodeNumber = totalNodes + 1;
+        an.GetComponent<Node>().lastNode = true;
+        an.gameObject.name = "" + totalNodes;
+      
+        //first destroy all baby nodes...
+        GameObject[] gos = GameObject.FindGameObjectsWithTag("Node");
+
+        for (var i = 0; i < gos.Length; i++)
+        {
+            Destroy(gos[i]);
+        }
+
+        //then we start it's start function again!
+        for (int i = 0; i < list_go.Count; i++)
+        {
+            list_go[i].GetComponent<Node>().Start2();
+        }
+        totalNodes++;
+
+    }
+
+    void Subtract()
+    {
+
+    }
 
     void Update()
     {
-        for (int i = 0; i < nodes.Length-1; i++)
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            if (i < nodes.Length)
+            Add();
+        }
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            Subtract();
+        }
+        //
+        //LINE RENDERER MALARKEY
+        for (int i = 0; i < nodes.Count-1; i++)
+        {
+            if (i < nodes.Count)
             {
                 list_go[i].GetComponent<LineRenderer>().SetPosition(1, list_go[1+i].transform.position-list_go[i].transform.position);
             }
             
         }
-        for (int i = nodes.Length; i == nodes.Length; i++)
+        for (int i = nodes.Count; i == nodes.Count; i++)
         {
             list_go[i-1].GetComponent<LineRenderer>().SetPosition(1,list_go[0].transform.position-list_go[i-1].transform.position);
             list_go[i - 1].GetComponent<Node>().lastNode = true;
-           // Destroy(list_go[i-1].gameObject);
         }
-
-
+        //
+        //
     }
-
-
 }
