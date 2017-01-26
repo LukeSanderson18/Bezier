@@ -15,19 +15,21 @@ public class Node : MonoBehaviour {
     [Range(0f, 1f)]
     public float magicFloat = 0.5f;
     //
-    Vector3 startPoint;
-    Vector3 controlPoint;
+    public Vector3 startPoint;
+    public Vector3 controlPoint;
     public Vector3 endPoint;
 
     public Vector3 bezierPoint;
+
+    //
+
+    bool running;
 
 
 	// Use this for initialization
 	void Start () {
 
-        Invoke("Ham", 0.1f);      
-        controlPoint = Vector3.Lerp(startPoint, endPoint, 0.5f);             // start with control point exactly inbetween them.
-        controlPointGO = Instantiate(controlPointPrefab, controlPoint, Quaternion.identity);
+        Invoke("Ham", 0.1f);
         babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
 
 	}
@@ -43,27 +45,37 @@ public class Node : MonoBehaviour {
         {
             nextGO = GameObject.Find("0");
         }
+
+        startPoint = transform.position;
+        endPoint = nextGO.transform.position;   //convert next GO number to int
+
+        controlPoint = Vector3.Lerp(startPoint, endPoint, 0.5f);
+        controlPointGO = Instantiate(controlPointPrefab, controlPoint, Quaternion.identity);
+
+        running = true;
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        startPoint = transform.position;
-        int nextGO_int = nodeNumber;
-        endPoint = nextGO.transform.position;   //convert next GO number to int
-        controlPoint = controlPointGO.transform.position;
-        magicFloat = Mathf.PingPong(Time.time, 1);
-        GetBezier(magicFloat);
+        if (running)
+        {
+            startPoint = transform.position;
+            endPoint = nextGO.transform.position;   //convert next GO number to int
+            controlPoint = controlPointGO.transform.position;
+
+            magicFloat = Mathf.PingPong(Time.time, 1);
+
+            GetBezier(magicFloat);
 
 
-        babyNode1.transform.position = bezierPoint;
+            babyNode1.transform.position = bezierPoint;
+        }
 		
 	}
 
     public Vector3 GetBezier(float t)
     {
-
-       // point.x = (1-t) * (1-t) * point.x
         
         bezierPoint.x = (1 - t) * (1 - t) * startPoint.x + 2 * (1 - t) * t * controlPoint.x + t * t * endPoint.x;
         bezierPoint.y = (1 - t) * (1 - t) * startPoint.y + 2 * (1 - t) * t * controlPoint.y + t * t * endPoint.y;
