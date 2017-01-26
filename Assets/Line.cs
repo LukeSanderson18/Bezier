@@ -14,7 +14,8 @@ public class Line : MonoBehaviour {
         {
             GameObject an = Instantiate(nodePrefab, nodes[i] ,Quaternion.identity) as GameObject;
             list_go.Add(an);
-            
+            an.GetComponent<Node>().nodeNumber = i;
+            an.gameObject.name = ""+i;
         }
     }
 
