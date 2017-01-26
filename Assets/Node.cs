@@ -12,6 +12,7 @@ public class Node : MonoBehaviour {
     public GameObject controlPointPrefab;
     public GameObject babyNode1prefab;
     GameObject babyNode1;
+    [Range(0f, 1f)]
     public float magicFloat = 0.5f;
     //
     Vector3 startPoint;
@@ -24,30 +25,34 @@ public class Node : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
+        Invoke("Ham", 0.1f);      
+        controlPoint = Vector3.Lerp(startPoint, endPoint, 0.5f);             // start with control point exactly inbetween them.
+        controlPointGO = Instantiate(controlPointPrefab, controlPoint, Quaternion.identity);
+        babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
+
+	}
+
+    void Ham()
+    {
         if (!lastNode)
         {
             nextGO_int = nodeNumber + 1;
             nextGO = GameObject.Find(nextGO_int.ToString());
         }
-
         else
         {
             nextGO = GameObject.Find("0");
         }
-
-
-        babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
-	}
+    }
 	
 	// Update is called once per frame
 	void Update () {
 
         startPoint = transform.position;
         int nextGO_int = nodeNumber;
-        endPoint = GameObject.Find(nextGO_int.ToString()).transform.position;   //convert next GO number to int
-        controlPoint = Vector3.Lerp(startPoint, endPoint, 0.5f);             // start with control point exactly inbetween them.
-        //controlPointGO = Instantiate(controlPointPrefab, controlPoint, Quaternion.identity);
-
+        endPoint = nextGO.transform.position;   //convert next GO number to int
+        controlPoint = controlPointGO.transform.position;
+        magicFloat = Mathf.PingPong(Time.time, 1);
         GetBezier(magicFloat);
 
 
