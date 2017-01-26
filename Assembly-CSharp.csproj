@@ -46,6 +46,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\CameraController.cs" />
      <Compile Include="Assets\Line.cs" />
      <Compile Include="Assets\Node.cs" />
      <Compile Include="Assets\NodeMovement.cs" />

@@ -36,14 +36,18 @@ public class Line : MonoBehaviour {
 
     void Add()
     {
+
         list_go[list_go.Count - 1].GetComponent<Node>().lastNode = false;
         GameObject an = Instantiate(nodePrefab, Vector3.zero, Quaternion.identity) as GameObject;
         list_go.Add(an);
         nodes.Add(an.transform.position);
         
-        an.GetComponent<Node>().nodeNumber = totalNodes + 1;
+        an.GetComponent<Node>().nodeNumber = totalNodes;
         an.GetComponent<Node>().lastNode = true;
-        an.gameObject.name = "" + totalNodes;
+        int tN = totalNodes;
+        an.gameObject.name = "" + tN;
+
+        list_go[list_go.Count - 2].GetComponent<Node>().nextGO = list_go[list_go.Count - 1];
       
         //first destroy all baby nodes...
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Node");
@@ -58,7 +62,7 @@ public class Line : MonoBehaviour {
         {
             list_go[i].GetComponent<Node>().Start2();
         }
-        totalNodes++;
+        
 
     }
 
@@ -72,6 +76,7 @@ public class Line : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.W))
         {
             Add();
+            totalNodes++;
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
