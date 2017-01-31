@@ -1,76 +1,72 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 
-public class Car : MonoBehaviour {
+public class Car : MonoBehaviour
+{
+    /*Ship handling parameters*/
+    public float fwd_accel = 100f;
+    public float fwd_max_speed = 200f;
+    public float brake_speed = 200f;
+    public float turn_speed = 50f;
 
-    public float distance = 2f;
-    public float smoothing = 2f;
-    bool isGrounded = false;
+    /*Auto adjust to track surface parameters*/
+    public float hover_height = 3f;     //Distance to keep from the ground
+    public float height_smooth = 10f;   //How fast the ship will readjust to "hover_height"
+    public float pitch_smooth = 5f;     //How fast the ship will adjust its rotation to match track normal
 
-    void HitTest()
+    /*We will use all this stuff later*/
+    private Vector3 prev_up;
+    public float yaw;
+    private float smooth_y;
+    private float current_speed;
+
+
+    void FixedUpdate()
     {
-        Vector3 position = transform.position + transform.TransformDirection(Vector3.up) * 0.2f;
-        Vector3 dir = transform.TransformDirection(-Vector3.up);
-        Ray ray = new Ray(position, dir);
-
-        //
-
-        Debug.DrawLine(ray.origin, ray.origin + ray.direction * distance, Color.red);
-
-        RaycastHit hit;
-
-        if (Physics.Raycast(ray, hit, distance))
+        /*Here we get user input to calculate the speed the ship will get*/
+        if (Input.GetKey(KeyCode.W))
         {
-            if (hit.collider.tag == "Tube")
+            /*Increase our current speed only if it is not greater than fwd_max_speed*/
+            current_speed += (current_speed >= fwd_max_speed) ? 0f : fwd_accel * Time.deltaTime;
+        }
+        else
+        {
+            if (current_speed > 0)
             {
-                isGrounded = true;
-                this.transform.position = hit.point;
-
-                Debug.DrawLine(hit.point, hit.point + hit.normal, Color.blue);
-
-                Vector3 curVec3 = position - hit.point;
-                Vector3 targetVec3 = hit.normal;
-
-                Debug.DrawLine(hit.point, hit.point + curVec3.normalized, Color.white);
-
-                Quaternion targetQuat;
-
-                Vector3 fPos = transform.position + transform.TransformDirection(new Vector3(0, 1f, 1f));
-                Vector3 fDir = transform.TransformDirection(-Vector3.up);
-
-                Ray fRay = new Ray(fPos, fDir);
-                RaycastHit fHit;
-                float fDistance = 2f;
-
-                Debug.DrawLine(fRay.origin, fRay.origin + fRay.direction * fDistance, Color.magenta);
-
-                if (Physics.Raycast(fRay, fHit, fDistance))
-                {
-                    if (fHit.collider.tag == "Tube")
-                    {
-                        Debug.DrawLine(fHit.point, fHit.point + fHit.normal * fDistance, Color.cyan);
-                        targetQuat.SetLookRotation(fHit.point - transform.position, targetQuat);
-                    }
-                }
-
-                if (targetQuat == null)
-                {
-                    targetQuat.SetLookRotation(transform.TransformDirection(Vector3.forward), targetQuat);
-                }
-
-                this.gameObject.transform.rotation = Quaternion.Slerp(this.gameObject.transform.rotation, targetQuat, smoothing);
-
+                /*The ship will slow down by itself if we dont accelerate*/
+                current_speed -= brake_speed * Time.deltaTime;
             }
-
-            return isGrounded;
-
+            else
+            {
+                current_speed = 0f;
+            }
         }
 
+        /*We get the user input and modifiy the direction the ship will face towards*/
+        yaw += turn_speed * Time.deltaTime * Input.GetAxis("Horizontal");
+        /*We want to save our current transform.up vector so we can smoothly change it later*/
+        prev_up = transform.up;
+        /*Now we set all angles to zero except for the Y which corresponds to the Yaw*/
+        transform.rotation = Quaternion.Euler(0, yaw, 0);
+
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -prev_up, out hit))
+        {
+            Debug.DrawLine(transform.position, hit.point);
+
+            /*Here are the meat and potatoes: first we calculate the new up vector for the ship using lerp so that it is smoothed*/
+            Vector3 desired_up = Vector3.Lerp(prev_up, hit.normal, Time.deltaTime * pitch_smooth);
+            /*Then we get the angle that we have to rotate in quaternion format*/
+            Quaternion tilt = Quaternion.FromToRotation(transform.up, desired_up);
+            /*Now we apply it to the ship with the quaternion product property*/
+            transform.rotation = tilt * transform.rotation;
+
+            /*Smoothly adjust our height*/
+            smooth_y = Mathf.Lerp(smooth_y, hover_height - hit.distance, Time.deltaTime * height_smooth);
+            transform.localPosition += prev_up * smooth_y;
+        }
+
+        /*Finally we move the ship forward according to the speed we calculated before*/
+        transform.position += transform.forward * (current_speed * Time.deltaTime);
     }
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }
