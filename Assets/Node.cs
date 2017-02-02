@@ -54,6 +54,7 @@ public class Node : MonoBehaviour {
 
 
         };
+        babyNode.transform.GetChild(0).GetChild(0).Translate(-4.75, 0, 0, babyNode.transform.GetChild(0));
         Triangulator tr = new Triangulator(vertices2D);
         int[] indices = tr.Triangulate();
 
