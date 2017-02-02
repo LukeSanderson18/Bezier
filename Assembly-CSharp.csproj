@@ -53,7 +53,9 @@
      <Compile Include="Assets\Node.cs" />
      <Compile Include="Assets\NodeMovement.cs" />
      <Compile Include="Assets\Plane.cs" />
+     <Compile Include="Assets\Triangulator.cs" />
      <Compile Include="Assets\Tube.cs" />
+     <Compile Include="Assets\babyNodeMeshGen.cs" />
      <Compile Include="Assets\shipRotate.cs" />
      <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
      <None Include="Assets\Fantasy Skybox FREE\Fog and Ambient reference.txt" />

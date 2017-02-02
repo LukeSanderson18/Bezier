@@ -27,15 +27,55 @@ public class Node : MonoBehaviour {
 
     bool running;
 
+    public int zing;
 
 	// Use this for initialization
 	void Start () {
 
-        //It takes a frame to receive data from Line class. So I started later. Sue me
-        //Invoke("Start2", 0.1f);     
+        //Invoke("CreateMesh", 0);
 
 
 	}
+
+    void CreateMesh(GameObject babyNode)
+    {
+        // Use the triangulator to get indices for creating triangles
+        print("HIASFHAISFH");
+        Vector2[] vertices2D = new Vector2[]
+        {
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x,babyNode.transform.GetChild(0).GetChild(0).position.y+4),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x +3,babyNode.transform.GetChild(0).GetChild(0).position.y+3),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x+4,babyNode.transform.GetChild(0).GetChild(0).position.y),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x+3,babyNode.transform.GetChild(0).GetChild(0).position.y-3),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x,babyNode.transform.GetChild(0).GetChild(0).position.y-4),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x-3,babyNode.transform.GetChild(0).GetChild(0).position.y-3),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x-4,babyNode.transform.GetChild(0).GetChild(0).position.y),
+            new Vector2(babyNode.transform.GetChild(0).GetChild(0).position.x-3,babyNode.transform.GetChild(0).GetChild(0).position.y+3),
+
+
+        };
+        Triangulator tr = new Triangulator(vertices2D);
+        int[] indices = tr.Triangulate();
+
+        // Create the Vector3 vertices
+        Vector3[] vertices = new Vector3[vertices2D.Length];
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
+        }
+
+        // Create the mesh
+        Mesh msh = new Mesh();
+        msh.vertices = vertices;
+        msh.triangles = indices;
+        msh.RecalculateNormals();
+        msh.RecalculateBounds();
+
+        // Set up game object with mesh;
+        babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshRenderer));
+        MeshFilter filter = babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
+        filter.mesh = msh;
+    }
 
     public void Start2()
     {
@@ -59,8 +99,8 @@ public class Node : MonoBehaviour {
         {
             GameObject babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
             babyNodes.Add(babyNode1);
+            CreateMesh(babyNode1);
         }
-
 
         running = true;
     }
@@ -85,16 +125,18 @@ public class Node : MonoBehaviour {
             for (int i = 0; i < babyNodes.Count; i++ )
             {
                 GetBezier(i/(float)babyNodes.Count);
-                //print(i + "   ___ " + bezierPoint);               //testing.
                 babyNodes[i].transform.position = bezierPoint;
+                if (i < babyNodes.Count-1)
+                {
+                    babyNodes[i].transform.GetChild(0).LookAt(babyNodes[i + 1].transform.position);
+                }
+                else
+                {
+                    babyNodes[i].transform.GetChild(0).LookAt(nextGO.transform.position);
+                }
 
             }
-
-
-
-
-        }
-		
+        }		
 	}
 
     public Vector3 GetBezier(float t)
