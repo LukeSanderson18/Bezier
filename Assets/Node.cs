@@ -27,6 +27,8 @@ public class Node : MonoBehaviour
     public int noOfSegments = 10;
     public List<GameObject> babyNodes;
 
+    public Vector3[] newVertices;
+
     //
 
     bool running;
@@ -40,14 +42,10 @@ public class Node : MonoBehaviour
         //Invoke("CreateMesh", 0);
     }
 
-    void CreateMesh(GameObject babyNode, int babyNodeNumber)
+    public void CreateMesh(GameObject babyNode, int babyNodeNumber)
     {
-        print("ASD");
         Mesh mesh = new Mesh();
 
-
-        //print(babyNodeNumber);
-        //test octagon;
         Transform babyMesh = babyNodes[babyNodeNumber].transform.GetChild(0).GetChild(0);
         Transform nextBabyMesh;
         print(babyMesh);
@@ -55,36 +53,24 @@ public class Node : MonoBehaviour
         {
             if (nodeNumber == 0)
             {
+                print("asdfasdfadsfasdf");
+
                 nextBabyMesh = babyNodes[babyNodes.Count - 1].transform.GetChild(0).GetChild(0);
             }
             else
             {
+                print("zzzzzzzzzzzzzz");
                 int asdf = nodeNumber - 1;
-                nextBabyMesh = GameObject.Find(asdf.ToString()).transform.GetChild(0).GetChild(0);
+                nextBabyMesh = Camera.main.transform;// GameObject.Find(asdf.ToString()).transform.GetChild(0).GetChild(0);
+                //get first cube's biz. for very first block only!
             }
         }
         else
         {
             nextBabyMesh = babyNodes[babyNodeNumber - 1].transform.GetChild(0).GetChild(0);
         }
-        print(nextBabyMesh);
 
-
-        /*Vector2[] vertices2D1 = new Vector2[]
-        {
-            new Vector2(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y+4),
-            new Vector2(babyMesh.position.x +3-babyNode.transform.position.x,   babyMesh.position.y+3),
-            new Vector2(babyMesh.position.x+4-babyNode.transform.position.x,    babyMesh.position.y),
-            new Vector2(babyMesh.position.x+3-babyNode.transform.position.x,    babyMesh.position.y-3),
-            new Vector2(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y-4),
-            new Vector2(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y-3),
-            new Vector2(babyMesh.position.x-4-babyNode.transform.position.x,    babyMesh.position.y),
-            new Vector2(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y+3), 
-        };
-         */
-
-
-        Vector3[] newVertices = new Vector3[16];
+        newVertices = new Vector3[16];
 
         newVertices[0] = new Vector3(babyMesh.position.x, babyMesh.position.y + .4f, babyMesh.position.z);                  //top - mine
         newVertices[1] = new Vector3(nextBabyMesh.position.x, nextBabyMesh.position.y + 0.4f, nextBabyMesh.position.z);     //top - next
@@ -114,13 +100,39 @@ public class Node : MonoBehaviour
 
         mesh.vertices = newVertices;
 
+        /*GameObject.Find("Tube").GetComponent<Tube>().vertices = new Tube.TubeVertex[]
+        {
+            new Tube.TubeVertex(newVertices[0],1f,Color.white),
+            new Tube.TubeVertex(newVertices[1],1f,Color.white),
+            new Tube.TubeVertex(newVertices[2],1f,Color.white),
+            new Tube.TubeVertex(newVertices[3],1f,Color.white),
+            new Tube.TubeVertex(newVertices[4],1f,Color.white),
+            new Tube.TubeVertex(newVertices[5],1f,Color.white),
+            new Tube.TubeVertex(newVertices[6],1f,Color.white),
+            new Tube.TubeVertex(newVertices[7],1f,Color.white),
+            new Tube.TubeVertex(newVertices[8],1f,Color.white),
+            new Tube.TubeVertex(newVertices[9],1f,Color.white),
+            new Tube.TubeVertex(newVertices[10],1f,Color.white),
+            new Tube.TubeVertex(newVertices[11],1f,Color.white),
+            new Tube.TubeVertex(newVertices[12],1f,Color.white),
+            new Tube.TubeVertex(newVertices[13],1f,Color.white),
+            new Tube.TubeVertex(newVertices[14],1f,Color.white),
+            new Tube.TubeVertex(newVertices[15],1f,Color.white)
+
+        };
+         */
+
         for (int i = 0; i < newVertices.Length; i++)
         {
            GameObject an = Instantiate(testCube, newVertices[i], Quaternion.identity);
            
            an.transform.parent = babyMesh;
+           an.name = babyMesh + " + " + nextBabyMesh;
+
           
         }
+
+        //print(babyMesh.transform.position + "," + nextBabyMesh.transform.position); 
 
 
         Vector2[] uv = new Vector2[newVertices.Length];
@@ -138,9 +150,9 @@ public class Node : MonoBehaviour
         newTriangles[0] = 0;
         newTriangles[1] = 2;
         newTriangles[2] = 1;
-        newTriangles[3] = 2;
-        newTriangles[4] = 3;
-        newTriangles[5] = 1;
+        newTriangles[3] = 1;
+        newTriangles[4] = 2;
+        newTriangles[5] = 3;
 
         mesh.triangles = newTriangles;
 
@@ -148,7 +160,7 @@ public class Node : MonoBehaviour
 
         for (int i = 0; i < normals.Length; i++)
         {
-            normals[i] = Vector3.forward;
+            normals[i] = Vector3.up;
         }
 
 
@@ -207,11 +219,11 @@ public class Node : MonoBehaviour
 
 
         // Set up game object with mesh;
-        babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshRenderer));
-        MeshFilter filter = babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
-        filter.mesh = mesh;
+       // babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshRenderer));
+       // MeshFilter filter = babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
+       // filter.mesh = mesh;
 
-
+        
     }
 
     public void Start2()

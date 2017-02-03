@@ -20,7 +20,6 @@ public class Tube : MonoBehaviour
     [Serializable]
     public class TubeVertex
     {
-        
         public Vector3 point = Vector3.zero;
         public float radius = 1.0f;
         public Color color = Color.white;
@@ -49,6 +48,7 @@ public class Tube : MonoBehaviour
 
     void Reset()
     {
+
         vertices = new TubeVertex[]
         {
             new TubeVertex(Vector3.zero, 1.0f, Color.white), 
@@ -163,8 +163,6 @@ public class Tube : MonoBehaviour
     //sets all the points to points of a Vector3 array, as well as capping the ends.
     void SetPoints(Vector3[] points, float radius, Color col)
     {
-
-        /*
         if (points.Length < 2) return;
         vertices = new TubeVertex[points.Length + 2];
 
@@ -177,6 +175,5 @@ public class Tube : MonoBehaviour
         {
             vertices[p + 1] = new TubeVertex(points[p], radius, col);
         }
-         * */
     }
 }
