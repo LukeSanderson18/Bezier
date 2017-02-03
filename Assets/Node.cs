@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Node : MonoBehaviour {
 
+
+    public GameObject testCube;
+
     public bool lastNode;
     public int nodeNumber;
     public GameObject nextGO;
@@ -33,18 +36,15 @@ public class Node : MonoBehaviour {
 	void Start () {
 
         //Invoke("CreateMesh", 0);
-
-
 	}
 
     void CreateMesh(GameObject babyNode, int babyNodeNumber)
     {
-
-        MeshFilter mf = Camera.main.GetComponent<MeshFilter>();
+        print("ASD");
         Mesh mesh = new Mesh();
-        mf.mesh = mesh;
 
 
+        print(babyNodeNumber);
         //test octagon;
         Transform babyMesh = babyNodes[babyNodeNumber].transform.GetChild(0).GetChild(0);
         Transform nextBabyMesh;
@@ -109,6 +109,11 @@ public class Node : MonoBehaviour {
 
         mesh.vertices = newVertices;
 
+        for(int i = 0; i < newVertices.Length; i++)
+        {
+            Instantiate(testCube, newVertices[i], Quaternion.identity);
+        }
+
 
         Vector2[] uv = new Vector2[newVertices.Length];
 
@@ -135,7 +140,7 @@ public class Node : MonoBehaviour {
 
         for (int i = 0; i < normals.Length; i++)
         {
-            normals[i] = -Vector3.forward;
+            normals[i] = Vector3.forward;
         }
         
         
@@ -143,7 +148,7 @@ public class Node : MonoBehaviour {
             mesh.normals = normals;
 
 
-
+           // mf.mesh = mesh;
         
         /*Vector2[] newUV = new Vector2[] 
         { 
@@ -189,20 +194,16 @@ public class Node : MonoBehaviour {
         {
             vertices[i] = new Vector3(vertices2D[i].x, vertices2D[i].y, 0);
         }
+         */
 
-        // Create the mesh
-        Mesh msh = new Mesh();
-        msh.vertices = vertices;
-        msh.triangles = indices;
-        msh.RecalculateNormals();
-        msh.RecalculateBounds();
+
 
         // Set up game object with mesh;
         babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshRenderer));
         MeshFilter filter = babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
-        filter.mesh = msh;
-         * 
-         * */
+        filter.mesh = mesh;
+         
+         
     }
 
     public void Start2()
