@@ -39,20 +39,24 @@ public class Node : MonoBehaviour {
 
     void CreateMesh(GameObject babyNode, int babyNodeNumber)
     {
-        // Use the triangulator to get indices for creating triangles
-        print("HIASFHAISFH");
+
+        MeshFilter mf = Camera.main.GetComponent<MeshFilter>();
+        Mesh mesh = new Mesh();
+        mf.mesh = mesh;
+
+
         //test octagon;
         Transform babyMesh = babyNodes[babyNodeNumber].transform.GetChild(0).GetChild(0);
         Transform nextBabyMesh;
         if (babyNodeNumber == 0)
         {
-            int asdf = nodeNumber-1;
             if (nodeNumber == 0)
             {
                 nextBabyMesh = babyNodes[babyNodes.Count - 1].transform;
             }
             else
-            {
+            {           
+                int asdf = nodeNumber-1;
                 nextBabyMesh = GameObject.Find(asdf.ToString()).transform;
             }
         }
@@ -75,37 +79,80 @@ public class Node : MonoBehaviour {
          */
          
 
-        Vector3[] newVertices = new Vector3[]
+        Vector3[] newVertices = new Vector3[16];
+        
+            newVertices[0] = new Vector3(babyMesh.position.x-babyNode.transform.position.x, babyMesh.position.y+4,babyMesh.position.z);       //top - mine
+            newVertices[1] = new Vector3(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y+4,nextBabyMesh.position.z);     //top - next
+
+            newVertices[2] = new Vector3(babyMesh.position.x +3-babyNode.transform.position.x,   babyMesh.position.y+3,babyMesh.position.z);
+            newVertices[3] = new Vector3(nextBabyMesh.position.x +3-babyNode.transform.position.x,   nextBabyMesh.position.y+3,nextBabyMesh.position.z);
+
+            newVertices[4] = new Vector3(babyMesh.position.x+4-babyNode.transform.position.x,    babyMesh.position.y,babyMesh.position.z);
+            newVertices[5] = new Vector3(nextBabyMesh.position.x+4-babyNode.transform.position.x,    nextBabyMesh.position.y,nextBabyMesh.position.z);
+
+            newVertices[6] = new Vector3(babyMesh.position.x+3-babyNode.transform.position.x,    babyMesh.position.y-3,babyMesh.position.z);
+            newVertices[7] = new Vector3(nextBabyMesh.position.x+3-babyNode.transform.position.x,    nextBabyMesh.position.y-3,nextBabyMesh.position.z);
+
+            newVertices[8] = new Vector3(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y-4,babyMesh.position.z);
+            newVertices[9] = new Vector3(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y-4,nextBabyMesh.position.z);
+
+            newVertices[10] = new Vector3(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y-3,babyMesh.position.z);
+            newVertices[11] = new Vector3(nextBabyMesh.position.x-3-babyNode.transform.position.x,    nextBabyMesh.position.y-3,nextBabyMesh.position.z);
+
+            newVertices[12] = new Vector3(babyMesh.position.x-4-babyNode.transform.position.x,    babyMesh.position.y,babyMesh.position.z);
+            newVertices[13] = new Vector3(nextBabyMesh.position.x-4-babyNode.transform.position.x,    nextBabyMesh.position.y,nextBabyMesh.position.z);
+
+            newVertices[14] = new Vector3(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y+3,babyMesh.position.z);
+            newVertices[15] = new Vector3(nextBabyMesh.position.x - 3 - babyNode.transform.position.x, nextBabyMesh.position.y + 3, nextBabyMesh.position.z);
+
+        
+
+        mesh.vertices = newVertices;
+
+
+        Vector2[] uv = new Vector2[newVertices.Length];
+
+        for (int i = 0; i < uv.Length; i++)
         {
-            new Vector3(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y+4,babyMesh.position.z),         //top - mine
-            new Vector3(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y+4,nextBabyMesh.position.z),     //top - next
-
-            new Vector3(babyMesh.position.x +3-babyNode.transform.position.x,   babyMesh.position.y+3,babyMesh.position.z),
-            new Vector3(nextBabyMesh.position.x +3-babyNode.transform.position.x,   nextBabyMesh.position.y+3,nextBabyMesh.position.z),
-
-            new Vector3(babyMesh.position.x+4-babyNode.transform.position.x,    babyMesh.position.y,babyMesh.position.z),
-            new Vector3(nextBabyMesh.position.x+4-babyNode.transform.position.x,    nextBabyMesh.position.y,nextBabyMesh.position.z),
-
-            new Vector3(babyMesh.position.x+3-babyNode.transform.position.x,    babyMesh.position.y-3,babyMesh.position.z),
-            new Vector3(nextBabyMesh.position.x+3-babyNode.transform.position.x,    nextBabyMesh.position.y-3,nextBabyMesh.position.z),
-
-            new Vector3(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y-4,babyMesh.position.z),
-            new Vector3(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y-4,nextBabyMesh.position.z),
-
-            new Vector3(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y-3,babyMesh.position.z),
-            new Vector3(nextBabyMesh.position.x-3-babyNode.transform.position.x,    nextBabyMesh.position.y-3,nextBabyMesh.position.z),
-
-            new Vector3(babyMesh.position.x-4-babyNode.transform.position.x,    babyMesh.position.y,babyMesh.position.z),
-            new Vector3(nextBabyMesh.position.x-4-babyNode.transform.position.x,    nextBabyMesh.position.y,nextBabyMesh.position.z),
-
-            new Vector3(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y+3,babyMesh.position.z), 
-            new Vector3(nextBabyMesh.position.x-3-babyNode.transform.position.x,    nextBabyMesh.position.y+3,nextBabyMesh.position.z), 
+            uv[i] = new Vector2(newVertices[i].x, newVertices[i].y);
+        }
+        
+        mesh.uv = uv;
 
 
-        };
+        int[] newTriangles = new int[6];
+       
+            newTriangles[0] = 0;
+            newTriangles[1] = 2;
+            newTriangles[2] = 1;
+            newTriangles[3] = 2;
+            newTriangles[4] = 3;
+            newTriangles[5] = 1;
 
-        Vector2[] newUV = new Vector2[] 
+            mesh.triangles = newTriangles;
+
+        Vector3[] normals = new Vector3[newVertices.Length];
+
+        for (int i = 0; i < normals.Length; i++)
+        {
+            normals[i] = -Vector3.forward;
+        }
+        
+        
+
+            mesh.normals = normals;
+
+
+
+        
+        /*Vector2[] newUV = new Vector2[] 
         { 
+            new Vector2(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y+4),         //top - mine
+            new Vector2(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y+4),     //top - next
+
+            new Vector2(babyMesh.position.x +3-babyNode.transform.position.x,   babyMesh.position.y+3),
+            new Vector2(nextBabyMesh.position.x +3-babyNode.transform.position.x,   nextBabyMesh.position.y+3),
+
             new Vector2(babyMesh.position.x+4-babyNode.transform.position.x,    babyMesh.position.y),
             new Vector2(nextBabyMesh.position.x+4-babyNode.transform.position.x,    nextBabyMesh.position.y),
 
@@ -125,14 +172,12 @@ public class Node : MonoBehaviour {
             new Vector2(nextBabyMesh.position.x-3-babyNode.transform.position.x,    nextBabyMesh.position.y+3), 
 
         };
+         */
 
-        int[] newTriangles = new int[] { 0, 1, 2 };
+        
 
-         Mesh mesh = new Mesh();
-         Camera.main.GetComponent<MeshFilter>().mesh = mesh;
-         mesh.vertices = newVertices;
-         mesh.uv = newUV;
-         mesh.triangles = newTriangles;
+
+
         
         //babyNode.transform.GetChild(0).GetChild(0).Translate(-4.75f, 0, 0, Space.Self);
         /*Triangulator tr = new Triangulator(vertices2D);
