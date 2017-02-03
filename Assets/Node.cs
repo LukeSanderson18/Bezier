@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Node : MonoBehaviour {
+public class Node : MonoBehaviour
+{
 
 
     public GameObject testCube;
@@ -32,11 +33,12 @@ public class Node : MonoBehaviour {
 
     public int zing;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
 
         //Invoke("CreateMesh", 0);
-	}
+    }
 
     void CreateMesh(GameObject babyNode, int babyNodeNumber)
     {
@@ -44,27 +46,30 @@ public class Node : MonoBehaviour {
         Mesh mesh = new Mesh();
 
 
-        print(babyNodeNumber);
+        //print(babyNodeNumber);
         //test octagon;
         Transform babyMesh = babyNodes[babyNodeNumber].transform.GetChild(0).GetChild(0);
         Transform nextBabyMesh;
+        print(babyMesh);
         if (babyNodeNumber == 0)
         {
             if (nodeNumber == 0)
             {
-                nextBabyMesh = babyNodes[babyNodes.Count - 1].transform;
+                nextBabyMesh = babyNodes[babyNodes.Count - 1].transform.GetChild(0).GetChild(0);
             }
             else
-            {           
-                int asdf = nodeNumber-1;
-                nextBabyMesh = GameObject.Find(asdf.ToString()).transform;
+            {
+                int asdf = nodeNumber - 1;
+                nextBabyMesh = GameObject.Find(asdf.ToString()).transform.GetChild(0).GetChild(0);
             }
         }
         else
         {
             nextBabyMesh = babyNodes[babyNodeNumber - 1].transform.GetChild(0).GetChild(0);
         }
-        
+        print(nextBabyMesh);
+
+
         /*Vector2[] vertices2D1 = new Vector2[]
         {
             new Vector2(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y+4),
@@ -77,41 +82,44 @@ public class Node : MonoBehaviour {
             new Vector2(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y+3), 
         };
          */
-         
+
 
         Vector3[] newVertices = new Vector3[16];
-        
-            newVertices[0] = new Vector3(babyMesh.position.x-babyNode.transform.position.x, babyMesh.position.y+4,babyMesh.position.z);       //top - mine
-            newVertices[1] = new Vector3(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y+4,nextBabyMesh.position.z);     //top - next
 
-            newVertices[2] = new Vector3(babyMesh.position.x +3-babyNode.transform.position.x,   babyMesh.position.y+3,babyMesh.position.z);
-            newVertices[3] = new Vector3(nextBabyMesh.position.x +3-babyNode.transform.position.x,   nextBabyMesh.position.y+3,nextBabyMesh.position.z);
+        newVertices[0] = new Vector3(babyMesh.position.x, babyMesh.position.y + .4f, babyMesh.position.z);                  //top - mine
+        newVertices[1] = new Vector3(nextBabyMesh.position.x, nextBabyMesh.position.y + 0.4f, nextBabyMesh.position.z);     //top - next
 
-            newVertices[4] = new Vector3(babyMesh.position.x+4-babyNode.transform.position.x,    babyMesh.position.y,babyMesh.position.z);
-            newVertices[5] = new Vector3(nextBabyMesh.position.x+4-babyNode.transform.position.x,    nextBabyMesh.position.y,nextBabyMesh.position.z);
+        newVertices[2] = new Vector3(babyMesh.position.x + .3f, babyMesh.position.y + .3f, babyMesh.position.z);
+        newVertices[3] = new Vector3(nextBabyMesh.position.x + .3f, nextBabyMesh.position.y + .3f, nextBabyMesh.position.z);
 
-            newVertices[6] = new Vector3(babyMesh.position.x+3-babyNode.transform.position.x,    babyMesh.position.y-3,babyMesh.position.z);
-            newVertices[7] = new Vector3(nextBabyMesh.position.x+3-babyNode.transform.position.x,    nextBabyMesh.position.y-3,nextBabyMesh.position.z);
+        newVertices[4] = new Vector3(babyMesh.position.x + .4f, babyMesh.position.y, babyMesh.position.z);
+        newVertices[5] = new Vector3(nextBabyMesh.position.x + .4f, nextBabyMesh.position.y, nextBabyMesh.position.z);
 
-            newVertices[8] = new Vector3(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y-4,babyMesh.position.z);
-            newVertices[9] = new Vector3(nextBabyMesh.position.x-babyNode.transform.position.x,      nextBabyMesh.position.y-4,nextBabyMesh.position.z);
+        newVertices[6] = new Vector3(babyMesh.position.x + .3f, babyMesh.position.y - .3f, babyMesh.position.z );
+        newVertices[7] = new Vector3(nextBabyMesh.position.x + .3f, nextBabyMesh.position.y - .3f, nextBabyMesh.position.z);
 
-            newVertices[10] = new Vector3(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y-3,babyMesh.position.z);
-            newVertices[11] = new Vector3(nextBabyMesh.position.x-3-babyNode.transform.position.x,    nextBabyMesh.position.y-3,nextBabyMesh.position.z);
+        newVertices[8] = new Vector3(babyMesh.position.x, babyMesh.position.y - .4f, babyMesh.position.z);
+        newVertices[9] = new Vector3(nextBabyMesh.position.x , nextBabyMesh.position.y - .4f, nextBabyMesh.position.z);
 
-            newVertices[12] = new Vector3(babyMesh.position.x-4-babyNode.transform.position.x,    babyMesh.position.y,babyMesh.position.z);
-            newVertices[13] = new Vector3(nextBabyMesh.position.x-4-babyNode.transform.position.x,    nextBabyMesh.position.y,nextBabyMesh.position.z);
+        newVertices[10] = new Vector3(babyMesh.position.x - .3f , babyMesh.position.y - .3f, babyMesh.position.z );
+        newVertices[11] = new Vector3(nextBabyMesh.position.x - .3f , nextBabyMesh.position.y - .3f, nextBabyMesh.position.z);
 
-            newVertices[14] = new Vector3(babyMesh.position.x-3-babyNode.transform.position.x,    babyMesh.position.y+3,babyMesh.position.z);
-            newVertices[15] = new Vector3(nextBabyMesh.position.x - 3 - babyNode.transform.position.x, nextBabyMesh.position.y + 3, nextBabyMesh.position.z);
+        newVertices[12] = new Vector3(babyMesh.position.x - .4f , babyMesh.position.y, babyMesh.position.z );
+        newVertices[13] = new Vector3(nextBabyMesh.position.x - .4f , nextBabyMesh.position.y, nextBabyMesh.position.z);
 
-        
+        newVertices[14] = new Vector3(babyMesh.position.x - .3f, babyMesh.position.y + .3f, babyMesh.position.z );
+        newVertices[15] = new Vector3(nextBabyMesh.position.x - .3f , nextBabyMesh.position.y + .3f, nextBabyMesh.position.z);
+
+
 
         mesh.vertices = newVertices;
 
-        for(int i = 0; i < newVertices.Length; i++)
+        for (int i = 0; i < newVertices.Length; i++)
         {
-            Instantiate(testCube, newVertices[i], Quaternion.identity);
+           GameObject an = Instantiate(testCube, newVertices[i], Quaternion.identity);
+           
+           an.transform.parent = babyMesh;
+          
         }
 
 
@@ -121,20 +129,20 @@ public class Node : MonoBehaviour {
         {
             uv[i] = new Vector2(newVertices[i].x, newVertices[i].y);
         }
-        
+
         mesh.uv = uv;
 
 
         int[] newTriangles = new int[6];
-       
-            newTriangles[0] = 0;
-            newTriangles[1] = 2;
-            newTriangles[2] = 1;
-            newTriangles[3] = 2;
-            newTriangles[4] = 3;
-            newTriangles[5] = 1;
 
-            mesh.triangles = newTriangles;
+        newTriangles[0] = 0;
+        newTriangles[1] = 2;
+        newTriangles[2] = 1;
+        newTriangles[3] = 2;
+        newTriangles[4] = 3;
+        newTriangles[5] = 1;
+
+        mesh.triangles = newTriangles;
 
         Vector3[] normals = new Vector3[newVertices.Length];
 
@@ -142,14 +150,14 @@ public class Node : MonoBehaviour {
         {
             normals[i] = Vector3.forward;
         }
-        
-        
-
-            mesh.normals = normals;
 
 
-           // mf.mesh = mesh;
-        
+
+        mesh.normals = normals;
+
+
+        // mf.mesh = mesh;
+
         /*Vector2[] newUV = new Vector2[] 
         { 
             new Vector2(babyMesh.position.x-babyNode.transform.position.x,      babyMesh.position.y+4),         //top - mine
@@ -179,11 +187,11 @@ public class Node : MonoBehaviour {
         };
          */
 
-        
 
 
 
-        
+
+
         //babyNode.transform.GetChild(0).GetChild(0).Translate(-4.75f, 0, 0, Space.Self);
         /*Triangulator tr = new Triangulator(vertices2D);
         int[] indices = tr.Triangulate();
@@ -202,8 +210,8 @@ public class Node : MonoBehaviour {
         babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshRenderer));
         MeshFilter filter = babyNode.transform.GetChild(0).GetChild(0).gameObject.AddComponent(typeof(MeshFilter)) as MeshFilter;
         filter.mesh = mesh;
-         
-         
+
+
     }
 
     public void Start2()
@@ -228,14 +236,20 @@ public class Node : MonoBehaviour {
         {
             GameObject babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
             babyNodes.Add(babyNode1);
-            CreateMesh(babyNode1,i);
+
+
+        }
+        for (int i = 0; i < babyNodes.Count; i++)
+        {
+            CreateMesh(babyNodes[i], i);
         }
 
         running = true;
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -243,7 +257,7 @@ public class Node : MonoBehaviour {
         }
         if (running)
         {
-            
+
             startPoint = transform.position;
             endPoint = nextGO.transform.position;   //convert next GO number to int
             controlPoint = controlPointGO.transform.position;
@@ -251,11 +265,11 @@ public class Node : MonoBehaviour {
             //magicFloat = Mathf.PingPong(Time.time, 1);
 
 
-            for (int i = 0; i < babyNodes.Count; i++ )
+            for (int i = 0; i < babyNodes.Count; i++)
             {
-                GetBezier(i/(float)babyNodes.Count);
+                GetBezier(i / (float)babyNodes.Count);
                 babyNodes[i].transform.position = bezierPoint;
-                if (i < babyNodes.Count-1)
+                if (i < babyNodes.Count - 1)
                 {
                     babyNodes[i].transform.GetChild(0).LookAt(babyNodes[i + 1].transform.position);
                 }
@@ -265,8 +279,8 @@ public class Node : MonoBehaviour {
                 }
 
             }
-        }		
-	}
+        }
+    }
 
     public Vector3 GetBezier(float t)
     {
