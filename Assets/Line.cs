@@ -63,19 +63,8 @@ public class Line : MonoBehaviour {
             list_go[i].GetComponent<Node>().Start2();
         }
 
-        GameObject.Find("Tube").GetComponent<Tube>().vertices = new Tube.TubeVertex[]
-        {
-            new Tube.TubeVertex(nodes[0],1f,Color.white),
-            new Tube.TubeVertex(nodes[1],1f,Color.white),
-            new Tube.TubeVertex(nodes[2],1f,Color.white),
-            new Tube.TubeVertex(nodes[3],1f,Color.white),
-            new Tube.TubeVertex(nodes[4],1f,Color.white),
-                        new Tube.TubeVertex(nodes[5],1f,Color.white),
-                                    new Tube.TubeVertex(nodes[0],1f,Color.white),
-
-
-
-        };
+        
+         
     }
 
     void Subtract()

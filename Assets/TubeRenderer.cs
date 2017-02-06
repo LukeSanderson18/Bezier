@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(MeshRenderer))]
 [RequireComponent(typeof(MeshFilter))]
-public class Tube : MonoBehaviour
+public class TubeRenderer : MonoBehaviour
 {
     /*
     TubeRenderer.cs
