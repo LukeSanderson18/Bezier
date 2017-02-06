@@ -89,12 +89,10 @@ public class Node : MonoBehaviour
        
         for (int i = 0; i < newVertices.Length/2; i++)
         {
-            GameObject an = Instantiate(testCube, transform.TransformPoint(newVertices[i]), Quaternion.identity);
+            GameObject an = Instantiate(testCube, (newVertices[i]), Quaternion.identity);
           an.transform.parent = babyMesh;
-          if (i == 9)
-          {
-             // an.GetComponent<test2>().Create(newnewVertices[0], newnewVertices[8], newnewVertices[9], newnewVertices[1]);
-          }
+            
+          
         }
         
         /*
@@ -206,6 +204,7 @@ public class Node : MonoBehaviour
         {
             GameObject babyNode1 = Instantiate(babyNode1prefab, transform.position, Quaternion.identity);
             babyNodes.Add(babyNode1);
+            babyNode1.name = ("BabyNode:" + i);
 
 
         }

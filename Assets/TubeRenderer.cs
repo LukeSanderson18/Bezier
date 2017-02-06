@@ -63,6 +63,7 @@ public class TubeRenderer : MonoBehaviour
 
     void LateUpdate()
     {
+
         if (null == vertices ||
             vertices.Length <= 1)
         {
