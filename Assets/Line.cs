@@ -1,12 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
- using System.Collections.Generic;
+using System.Collections.Generic;
 
-public class Line : MonoBehaviour {
+public class Line : MonoBehaviour
+{
 
     public List<Vector3> nodes;
     public GameObject nodePrefab;
     public List<GameObject> list_go;
+    public List<GameObject> list_babyNodes;
 
     int totalNodes;
 
@@ -14,25 +16,25 @@ public class Line : MonoBehaviour {
     {
         for (int i = 0; i < nodes.Count; i++)
         {
-            GameObject an = Instantiate(nodePrefab, nodes[i] ,Quaternion.identity) as GameObject;
+            GameObject an = Instantiate(nodePrefab, nodes[i], Quaternion.identity) as GameObject;
             list_go.Add(an);
             an.GetComponent<Node>().nodeNumber = i;
-            an.gameObject.name = ""+i;
+            an.gameObject.name = "" + i;
             totalNodes++;
         }
     }
 
-   /* public void Reset()
-    {
-        nodes = new Vector3[]
-        {
-            new Vector3(1,0,0),
-            new Vector3(2,0,0),
-            new Vector3(3,0,0)
+    /* public void Reset()
+     {
+         nodes = new Vector3[]
+         {
+             new Vector3(1,0,0),
+             new Vector3(2,0,0),
+             new Vector3(3,0,0)
 
-        };
-    }
-    */
+         };
+     }
+     */
 
     void Add()
     {
@@ -63,8 +65,32 @@ public class Line : MonoBehaviour {
             list_go[i].GetComponent<Node>().Start2();
         }
 
+        //
+
+        list_babyNodes.AddRange(GameObject.FindGameObjectsWithTag("babyNode"));
+        GameObject.Find("Tube").GetComponent<TubeRenderer>().vertices = new TubeRenderer.TubeVertex[list_babyNodes.Count];
+
+        Invoke("GenTube", 2f);
+    
+    
+
+    
+        //ABSOLUTELY NEEDS ^^^^^^ A GAP IN TIME. HAD ME STUCK FOR LIKE WHAT 3 DAYS? GODDAMN. LIKE 3 FRAMES STOPPED MY PROGRESS FOR THAT LONG. DAMN
+
         
          
+    }
+
+    void GenTube()
+    {
+        TubeRenderer.TubeVertex[] toot = new TubeRenderer.TubeVertex[list_babyNodes.Count];
+
+        for (int i = 0; i < list_babyNodes.Count; i++)
+        {
+            toot[i] = new TubeRenderer.TubeVertex(list_babyNodes[i].transform.position, 0.6f, Color.white);
+        }
+        GameObject.Find("Tube").GetComponent<TubeRenderer>().vertices = toot;
+
     }
 
     void Subtract()
@@ -85,17 +111,17 @@ public class Line : MonoBehaviour {
         }
         //
         //LINE RENDERER MALARKEY
-        for (int i = 0; i < nodes.Count-1; i++)
+        for (int i = 0; i < nodes.Count - 1; i++)
         {
             if (i < nodes.Count)
             {
-                list_go[i].GetComponent<LineRenderer>().SetPosition(1, list_go[1+i].transform.position-list_go[i].transform.position);
+                list_go[i].GetComponent<LineRenderer>().SetPosition(1, list_go[1 + i].transform.position - list_go[i].transform.position);
             }
-            
+
         }
         for (int i = nodes.Count; i == nodes.Count; i++)
         {
-            list_go[i-1].GetComponent<LineRenderer>().SetPosition(1,list_go[0].transform.position-list_go[i-1].transform.position);
+            list_go[i - 1].GetComponent<LineRenderer>().SetPosition(1, list_go[0].transform.position - list_go[i - 1].transform.position);
             list_go[i - 1].GetComponent<Node>().lastNode = true;
         }
         //
