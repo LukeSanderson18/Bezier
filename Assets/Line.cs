@@ -42,10 +42,10 @@ public class Line : MonoBehaviour
     {
 
         list_go[list_go.Count - 1].GetComponent<Node>().lastNode = false;
-        GameObject an = Instantiate(nodePrefab, new Vector3(7.916822f,0,-3.654793f), Quaternion.identity) as GameObject;
+        GameObject an = Instantiate(nodePrefab, new Vector3(7.916822f, 0, -3.654793f), Quaternion.identity) as GameObject;
         list_go.Add(an);
         nodes.Add(an.transform.position);
-        
+
         an.GetComponent<Node>().nodeNumber = totalNodes;
         an.GetComponent<Node>().lastNode = true;
         int tN = totalNodes;
@@ -53,17 +53,21 @@ public class Line : MonoBehaviour
 
         list_go[list_go.Count - 2].GetComponent<Node>().nextGO = list_go[list_go.Count - 1];
 
-       // vec3s.Clear();
+        // vec3s.Clear();
         //first destroy all baby nodes...
         GameObject[] gos = GameObject.FindGameObjectsWithTag("Node");
-       
+
         for (var i = 0; i < gos.Length; i++)
         {
-            if (gos[i].transform.parent != null)
-            {
-                Destroy(gos[i].transform.parent.gameObject);
-            }
+
             Destroy(gos[i]);
+        }
+
+        GameObject[] babyNodeys = GameObject.FindGameObjectsWithTag("babyNode");
+        for (int i = 0; i < babyNodeys.Length; i++)
+        {
+            Destroy(babyNodeys[i].gameObject);
+
         }
 
         //then we start it's start function again!
@@ -75,20 +79,28 @@ public class Line : MonoBehaviour
 
 
 
-        
-         
+
+
     }
 
     void GenTube()
     {
         TubeRenderer.TubeVertex[] toot = new TubeRenderer.TubeVertex[list_babyNodes.Count];
 
-        for (int i = 0; i < list_babyNodes.Count; i++)
+        for (int i = 0; i < list_babyNodes.Count + 1; i++)
         {
-            
+            if (i < list_babyNodes.Count)
+            {
                 toot[i] = new TubeRenderer.TubeVertex(list_babyNodes[i].transform.position, 0.6f, Color.white);
-            
-            
+            }
+            else
+            {
+                print("SHOULD WORK");
+                toot[list_babyNodes.Count-1] = new TubeRenderer.TubeVertex(list_babyNodes[1].transform.position, 0.6f, Color.white);
+
+            }
+
+
         }
         GameObject.Find("Tube").GetComponent<TubeRenderer>().vertices = toot;
 
@@ -105,7 +117,7 @@ public class Line : MonoBehaviour
         {
             totalNodes++;
             Add();
-            
+
         }
         if (Input.GetKeyDown(KeyCode.Q))
         {
