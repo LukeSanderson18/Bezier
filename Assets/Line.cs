@@ -40,7 +40,6 @@ public class Line : MonoBehaviour
 
     void Add()
     {
-
         list_go[list_go.Count - 1].GetComponent<Node>().lastNode = false;
         GameObject an = Instantiate(nodePrefab, new Vector3(7.916822f, 0, -3.654793f), Quaternion.identity) as GameObject;
         list_go.Add(an);
@@ -76,11 +75,6 @@ public class Line : MonoBehaviour
             list_go[i].GetComponent<Node>().Start2();
             //list_go[i].GetComponent<Node>().controlPoint = vec3s[i];
         }
-
-
-
-
-
     }
 
     void GenTube()

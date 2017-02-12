@@ -158,6 +158,14 @@ public class TubeRenderer : MonoBehaviour
             mesh.triangles = tris;
             mesh.RecalculateNormals();
             mesh.uv = uvs;
+
+           // DestroyImmediate(this.GetComponent<MeshCollider>());
+            MeshCollider collider = gameObject.GetComponent<MeshCollider>();
+
+
+            collider.sharedMesh = null;
+            collider.sharedMesh = mesh;
+            transform.localScale = Vector3.one * 50;
         }
     }
 
