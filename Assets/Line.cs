@@ -58,7 +58,6 @@ public class Line : MonoBehaviour
 
         for (var i = 0; i < gos.Length; i++)
         {
-
             Destroy(gos[i]);
         }
 
@@ -73,7 +72,6 @@ public class Line : MonoBehaviour
         for (int i = 0; i < list_go.Count; i++)
         {
             list_go[i].GetComponent<Node>().Start2();
-            //list_go[i].GetComponent<Node>().controlPoint = vec3s[i];
         }
     }
 

@@ -117,11 +117,6 @@ public class Node : MonoBehaviour
 
 
         }
-        for (int i = 0; i < babyNodes.Count; i++)
-        {
-            //CreateMesh(babyNodes[i], i);
-        }
-
         running = true;
     }
 
