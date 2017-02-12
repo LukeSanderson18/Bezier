@@ -17,6 +17,15 @@ public class TubeRenderer : MonoBehaviour
     (C) 2008 Last Bastion Games
     */
 
+    /*
+     * 
+     * Code that reverses material normals written by Joachim Ante
+     * 
+     * Found here:
+     *  http://wiki.unity3d.com/index.php/ReverseNormals
+     * 
+     * */
+
     [Serializable]
     public class TubeVertex
     {
@@ -32,6 +41,7 @@ public class TubeRenderer : MonoBehaviour
         }
     }
 
+    public GameObject mainShip;
     public TubeVertex[] vertices;
     public Material material;
 
@@ -61,6 +71,41 @@ public class TubeRenderer : MonoBehaviour
         mr.material = material;
     }
 
+    public void Create()
+    {
+        MeshCollider collider = gameObject.GetComponent<MeshCollider>();
+        Mesh mesh = GetComponent<MeshFilter>().mesh;
+
+        collider.sharedMesh = null;
+        collider.sharedMesh = mesh;
+        transform.localScale = Vector3.one * 50;
+        Instantiate(mainShip, GameObject.Find("0").transform.position * 50, GameObject.Find("0").transform.rotation);
+
+        //
+
+        MeshFilter filter = GetComponent(typeof(MeshFilter)) as MeshFilter;
+        if (filter != null)
+        {
+            Mesh meshy = filter.mesh;
+
+            Vector3[] normals = mesh.normals;
+            for (int i = 0; i < normals.Length; i++)
+                normals[i] = -normals[i];
+            meshy.normals = normals;
+
+            for (int m = 0; m < meshy.subMeshCount; m++)
+            {
+                int[] triangles = meshy.GetTriangles(m);
+                for (int i = 0; i < triangles.Length; i += 3)
+                {
+                    int temp = triangles[i + 0];
+                    triangles[i + 0] = triangles[i + 1];
+                    triangles[i + 1] = temp;
+                }
+                meshy.SetTriangles(triangles, m);
+            }
+        }	
+    }
     void LateUpdate()
     {
 
@@ -160,12 +205,7 @@ public class TubeRenderer : MonoBehaviour
             mesh.uv = uvs;
 
            // DestroyImmediate(this.GetComponent<MeshCollider>());
-            MeshCollider collider = gameObject.GetComponent<MeshCollider>();
-
-
-            collider.sharedMesh = null;
-            collider.sharedMesh = mesh;
-            transform.localScale = Vector3.one * 50;
+            
         }
     }
 

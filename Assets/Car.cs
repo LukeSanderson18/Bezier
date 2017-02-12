@@ -1,72 +1,82 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class Car : MonoBehaviour
-{
-    /*Ship handling parameters*/
-    public float fwd_accel = 100f;
-    public float fwd_max_speed = 200f;
-    public float brake_speed = 200f;
-    public float turn_speed = 50f;
+public class Car : MonoBehaviour {
 
-    /*Auto adjust to track surface parameters*/
-    public float hover_height = 3f;     //Distance to keep from the ground
-    public float height_smooth = 10f;   //How fast the ship will readjust to "hover_height"
-    public float pitch_smooth = 5f;     //How fast the ship will adjust its rotation to match track normal
+    public GameObject[] hovers;
 
-    /*We will use all this stuff later*/
-    private Vector3 prev_up;
-    public float yaw;
-    private float smooth_y;
-    private float current_speed;
+    public float fAccel = 100f;
+    public float bAccel = 25f;
+    float currentAccel;
 
+    public float rotAmount = 10f;
+    float currentRotAmount = 0f;
+
+    public float hoverForce = 9f;
+    public float hoverHeight = 2f;
+
+    Rigidbody rb;
+
+    public LayerMask groundLayer;
+	// Use this for initialization
+	void Start () {
+
+        rb = GetComponent<Rigidbody>();
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+
+        float vert = Input.GetAxis("Vertical");
+        float hor = Input.GetAxis("Horizontal");
+
+        currentAccel = 0f;
+        if (vert > 0.12f)
+        {
+            currentAccel = vert * fAccel;
+        }
+        else if (vert < -0.12f)
+        {
+            currentAccel = vert * bAccel;
+        }
+
+        currentRotAmount = 0f;
+        if (Mathf.Abs(hor) > 0.12f)
+        {
+            currentRotAmount = hor;
+        }
+		
+	}
 
     void FixedUpdate()
     {
-        /*Here we get user input to calculate the speed the ship will get*/
-        if (Input.GetKey(KeyCode.W))
-        {
-            /*Increase our current speed only if it is not greater than fwd_max_speed*/
-            current_speed += (current_speed >= fwd_max_speed) ? 0f : fwd_accel * Time.deltaTime;
-        }
-        else
-        {
-            if (current_speed > 0)
-            {
-                /*The ship will slow down by itself if we dont accelerate*/
-                current_speed -= brake_speed * Time.deltaTime;
-            }
-            else
-            {
-                current_speed = 0f;
-            }
-        }
-
-        /*We get the user input and modifiy the direction the ship will face towards*/
-        yaw += turn_speed * Time.deltaTime * Input.GetAxis("Horizontal");
-        /*We want to save our current transform.up vector so we can smoothly change it later*/
-        prev_up = transform.up;
-        /*Now we set all angles to zero except for the Y which corresponds to the Yaw*/
-        transform.rotation = Quaternion.Euler(0, yaw, 0);
-
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, -prev_up, out hit))
+        for (int i = 0; i < hovers.Length; i++)
         {
-            Debug.DrawLine(transform.position, hit.point);
-
-            /*Here are the meat and potatoes: first we calculate the new up vector for the ship using lerp so that it is smoothed*/
-            Vector3 desired_up = Vector3.Lerp(prev_up, hit.normal, Time.deltaTime * pitch_smooth);
-            /*Then we get the angle that we have to rotate in quaternion format*/
-            Quaternion tilt = Quaternion.FromToRotation(transform.up, desired_up);
-            /*Now we apply it to the ship with the quaternion product property*/
-            transform.rotation = tilt * transform.rotation;
-
-            /*Smoothly adjust our height*/
-            smooth_y = Mathf.Lerp(smooth_y, hover_height - hit.distance, Time.deltaTime * height_smooth);
-            transform.localPosition += prev_up * smooth_y;
+            //var hover = hovers[i];
+            //if it hits ground
+            if (Physics.Raycast(hovers[i].transform.position, -Vector3.up, out hit, hoverHeight, groundLayer))
+            {
+                rb.AddForceAtPosition(Vector3.up * hoverForce * (1.0f - (hit.distance / hoverHeight)), hovers[i].transform.position);
+            }
+            else    //fall
+            {
+                if (transform.position.y > hovers[i].transform.position.y)
+                {
+                    rb.AddForceAtPosition(hovers[i].transform.up * hoverForce, hovers[i].transform.position);
+                }
+                else
+                {
+                    rb.AddForceAtPosition(hovers[i].transform.up * -hoverForce*40, hovers[i].transform.position);
+                }
+            }
         }
+        rb.AddForce(transform.forward * currentAccel);
 
-        /*Finally we move the ship forward according to the speed we calculated before*/
-        transform.position += transform.forward * (current_speed * Time.deltaTime);
+        rb.AddRelativeTorque(Vector3.up * currentRotAmount * rotAmount);
+
+
     }
 }

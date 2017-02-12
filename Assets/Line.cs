@@ -97,6 +97,8 @@ public class Line : MonoBehaviour
 
         }
         GameObject.Find("Tube").GetComponent<TubeRenderer>().vertices = toot;
+        GameObject.Find("Tube").GetComponent<TubeRenderer>().Create();
+        
 
     }
 
