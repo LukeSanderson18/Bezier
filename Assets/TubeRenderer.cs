@@ -78,8 +78,8 @@ public class TubeRenderer : MonoBehaviour
 
         collider.sharedMesh = null;
         collider.sharedMesh = mesh;
-        transform.localScale = Vector3.one * 50;
-        Instantiate(mainShip, GameObject.Find("0").transform.position * 50, GameObject.Find("0").transform.rotation);
+        transform.localScale = new Vector3(50, 50, 50);// Vector3.one * 50;
+        Instantiate(mainShip, new Vector3(GameObject.Find("0").transform.position.x * 50,(GameObject.Find("0").transform.position.y * 50)+150,GameObject.Find("0").transform.position.z * 50), GameObject.Find("0").transform.rotation);
 
         //
 

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Node : MonoBehaviour
 {
 
-
+    bool selected;
     public GameObject testCube;
 
     public bool lastNode;

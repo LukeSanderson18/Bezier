@@ -55,6 +55,7 @@
      <Compile Include="Assets\Plane.cs" />
      <Compile Include="Assets\TubeRenderer.cs" />
      <Compile Include="Assets\babyNodeMeshGen.cs" />
+     <Compile Include="Assets\lookAtCamera.cs" />
      <Compile Include="Assets\shipRotate.cs" />
      <Compile Include="Assets\test2.cs" />
      <None Include="Assets\Fantasy Skybox FREE\Readme.txt" />
