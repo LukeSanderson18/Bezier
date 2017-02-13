@@ -69,7 +69,7 @@ public class Car : MonoBehaviour {
                 }
                 else
                 {
-                    rb.AddForceAtPosition(hovers[i].transform.up * -hoverForce*40, hovers[i].transform.position);
+                    rb.AddForceAtPosition(hovers[i].transform.up * -hoverForce, hovers[i].transform.position);
                 }
             }
         }

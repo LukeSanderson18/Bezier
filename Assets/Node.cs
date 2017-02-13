@@ -164,7 +164,5 @@ public class Node : MonoBehaviour
         bezierPoint.z = (1 - t) * (1 - t) * startPoint.z + 2 * (1 - t) * t * controlPoint.z + t * t * endPoint.z;
 
         return bezierPoint;
-
-        //what a sexy bit of code.
     }
 }
